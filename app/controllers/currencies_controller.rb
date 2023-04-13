@@ -21,11 +21,15 @@ class CurrenciesController < ApplicationController
   end
 
   def third_currency
-    @raw_conversion_data = open(https://api.exchangerate.host/convert?from="#{currency_from}&to=#{currency_to}.read
-    @parsed_conversion_data = JSON.parse(@parsed_conversion_data)
-    @query_hash = @parsed_conversion_data.fetch("query")
-    
+    @currency_from = params.fetch("currency_from")
+    @currency_to = params.fetch("currency_to")
+
+    @raw_conversion_data = open("https://api.exchangerate.host/convert?from=#{@currency_from}&to=#{@currency_to}").read
+    @parsed_conversion_data = JSON.parse(@raw_conversion_data)
+    @query_hash = @parsed_conversion_data.fetch("info")
+
+    @amount_conversion = @query_hash.fetch("rate")
+
     render ({ :template => "currency_templates/step_three.html.erb" })
   end
-
 end
